@@ -88,7 +88,7 @@ const clearPlay = async(client, channel) => {
     guiBtns[2].setLabel("Pause").setStyle("SECONDARY")
 
     playEmb = new MessageEmbed(guiMsg.embeds[0].setDescription(`Nothing is playing! /play to play`).setThumbnail(''))
-    playEmb.fields[0] = { name: "\u200B", value: `\`Length:\` ⠀⠀⠀⠀⠀\`Requested by:\` *I haven implement yet*` }
+    playEmb.fields[0] = { name: "\u200B", value: `\`Length:\` ⠀⠀⠀⠀⠀\`Requested by:\` *your mom*` }
 
     await guiMsg.edit({
         embeds: [playEmb, guiMsg.embeds[1], guiMsg.embeds[2]],
