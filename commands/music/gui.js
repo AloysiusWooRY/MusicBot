@@ -16,18 +16,7 @@ module.exports = {
         const queueEmb = new MessageEmbed()
             .setColor('#00ff00')
             .setTitle('Queue')
-            .setDescription(
-                "__**Up Next**__\n" +
-                "`1.` **[twenty one pilots: Stressed Out [OFFICIAL VIDEO]](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `4:43`\n" +
-                "`2.` **[Coldplay - Hymn For The Weekend (Official Video)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `3:46`\n" +
-                "`3.` **[twenty one pilots: Stressed Out [OFFICIAL VIDEO]](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `4:43`\n" +
-                "`4.` **[Coldplay - Hymn For The Weekend (Official Video)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `3:46`\n" +
-                "`5.` **[twenty one pilots: Stressed Out [OFFICIAL VIDEO]](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `4:43`\n" +
-                "`6.` **[Coldplay - Hymn For The Weekend (Official Video)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `3:46`\n" +
-                "`7.` **[twenty one pilots: Stressed Out [OFFICIAL VIDEO]](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `4:43`\n" +
-                "`8.` **[Coldplay - Hymn For The Weekend (Official Video)](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `3:46`\n" +
-                "`9.` **[twenty one pilots: Stressed Out [OFFICIAL VIDEO]](https://www.youtube.com/watch?v=dQw4w9WgXcQ)** | `4:43`\n"
-            )
+            .setDescription("__**Up Next**__\n")
             .addField("\u200B", "**5 songs in queue | 18:39 total length**")
 
         const consoleEmb = new MessageEmbed()
@@ -53,6 +42,10 @@ module.exports = {
             .setStyle('SECONDARY')
             .setCustomId('music-pause')
             .setLabel('Pause')
+        const buttonShuffle = new MessageButton()
+            .setStyle('SECONDARY')
+            .setCustomId('music-shuffle')
+            .setLabel('Shuffle')
 
 
         message.channel.send({
@@ -65,7 +58,8 @@ module.exports = {
                 new MessageActionRow().addComponents([
                     buttonSkip,
                     buttonStop,
-                    buttonPause
+                    buttonPause,
+                    buttonShuffle
                 ])
             ]
         })

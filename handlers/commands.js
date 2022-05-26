@@ -1,6 +1,5 @@
 const { getFiles } = require("../util/functions")
 const fs = require("fs")
-const { CommandInteractionOptionResolver } = require("discord.js")
 
 module.exports = (bot, reload) => {
     const { client } = bot

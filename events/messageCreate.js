@@ -5,7 +5,7 @@ module.exports = {
     run: async function runAll(bot, message) {
         const { client, prefix, owners } = bot
 
-        if (message.channel.id === "978924784266121216")
+        if (message.channel.id === "888984736859582514")
             setTimeout(() => message.delete(), 500)
 
         if (!message.guild) return

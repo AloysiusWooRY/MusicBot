@@ -11,18 +11,18 @@ let bot = {
     client
 }
 
-const CLIENT_ID = "444835244043010058"
+const CLIENT_ID = "347319288366891021"
 const GUILD_ID = "322271623543783424"
 
 client.slashcommands = new Discord.Collection()
 
 client.commandsToLoad = []
 client.loadSlashCommands = (bot, reload) => require("./handlers/slashcommands")(bot, reload)
-client.loadSlashCommands(bot, false)
+client.loadSlashCommands(bot, true)
 
 
 client.on("ready", async() => {
-    const rest = new REST({ version: "9" }).setToken(TOKEN)
+    const rest = new REST({ version: "9" }).setToken(process.env.TOKEN)
     console.log("Deploying slash commands")
     rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: client.commandsToLoad })
         .then(() => {

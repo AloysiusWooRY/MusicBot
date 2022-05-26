@@ -50,6 +50,7 @@ client.player.on("trackStart", (queue, track) => {
 })
 
 client.player.on("trackAdd", (queue, track) => {
+    if (!queue || !queue.playing) return
     updateQueue(client, queue)
 })
 

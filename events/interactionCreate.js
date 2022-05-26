@@ -15,7 +15,7 @@ const handleButton = async(bot, interaction) => {
     const button = client.buttons.get(name)
     if (!button) return
 
-    //await interaction.deferReply()
+    await interaction.deferUpdate()
     await button.run(client, interaction, params)
 
 }
