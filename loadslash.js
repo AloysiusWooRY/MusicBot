@@ -1,10 +1,10 @@
-const Discord = require("discord.js")
+const { Client, Collection, IntentsBitField } = require("discord.js")
 const { REST } = require("@discordjs/rest")
 const { Routes } = require("discord-api-types/v9")
 require("dotenv").config()
 
-const client = new Discord.Client({
-    intents: ["GUILDS"]
+const client = new Client({
+    intents: [IntentsBitField.Flags.Guilds]
 })
 
 let bot = {
@@ -14,14 +14,14 @@ let bot = {
 const CLIENT_ID = "347319288366891021"
 const GUILD_ID = "322271623543783424"
 
-client.slashcommands = new Discord.Collection()
+client.slashcommands = new Collection()
 
 client.commandsToLoad = []
 client.loadSlashCommands = (bot, reload) => require("./handlers/slashcommands")(bot, reload)
 client.loadSlashCommands(bot, true)
 
 
-client.on("ready", async() => {
+client.on("ready", async () => {
     const rest = new REST({ version: "9" }).setToken(process.env.TOKEN)
     console.log("Deploying slash commands")
     rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: client.commandsToLoad })

@@ -1,15 +1,17 @@
-const Discord = require("discord.js")
+const { Client, Collection, IntentsBitField } = require("discord.js")
 const fs = require("fs")
 const { Player } = require("discord-player")
+const { YouTubeExtractor } = require('@discord-player/extractor');
 const { updateQueue, clearPlay } = require("./util/updateGUI")
 require("dotenv").config()
 
-const client = new Discord.Client({
+const client = new Client({
     intents: [
-        "GUILDS",
-        "GUILD_VOICE_STATES",
-        "GUILD_MESSAGES",
-        "GUILD_MEMBERS"
+        IntentsBitField.Flags.Guilds,
+        IntentsBitField.Flags.GuildMembers,
+        IntentsBitField.Flags.GuildMessages,
+        IntentsBitField.Flags.GuildVoiceStates,
+        IntentsBitField.Flags.MessageContent
     ]
 })
 
@@ -20,10 +22,10 @@ let bot = {
 }
 
 client.commandsToLoad = []
-client.commands = new Discord.Collection()
-client.events = new Discord.Collection()
-client.slashcommands = new Discord.Collection()
-client.buttons = new Discord.Collection()
+client.commands = new Collection()
+client.events = new Collection()
+client.slashcommands = new Collection()
+client.buttons = new Collection()
 
 client.loadEvents = (bot, reload) => require("./handlers/events")(bot, reload)
 client.loadCommands = (bot, reload) => require("./handlers/commands")(bot, reload)
@@ -37,24 +39,30 @@ client.loadButtons(bot, false)
 
 module.exports = bot
 
-
 client.player = new Player(client, {
     ytdlOptions: {
         quality: "highestaudio",
-        highWaterMark: 1 << 25
+        highWaterMark: 1 << 25,
+        dlChunkSize: 0,
+        filter: "audioonly"
     }
 })
+client.player.extractors.loadDefault();
+console.log(client.player.scanDeps())
 
-client.player.on("trackStart", (queue, track) => {
+client.player.events.on("playerStart", (queue, track) => {
+    console.log("Start")
     updateQueue(client, queue)
 })
 
-client.player.on("trackAdd", (queue, track) => {
-    if (!queue || !queue.playing) return
+client.player.events.on("audioTrackAdd", (queue, track) => {
+    console.log("Add")
+    if (!queue || !queue.isPlaying()) return
     updateQueue(client, queue)
 })
 
-client.player.on("queueEnd", (queue) => {
+client.player.events.on("emptyQueue", (queue) => {
+    console.log("End")
     clearPlay(client, queue.metadata.channel)
 });
 

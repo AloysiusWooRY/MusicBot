@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 const { QueryType } = require("discord-player")
 const { updateConsole } = require("../util/updateGUI")
 
@@ -9,25 +9,25 @@ module.exports = {
         .setDescription("loads songs from yt")
         .addSubcommand((subcommand) =>
             subcommand.setName("song")
-            .setDescription("Loads a single song from a url")
-            .addStringOption((option) => option.setName("url").setDescription("the song's url").setRequired(true)))
+                .setDescription("Loads a single song from a url")
+                .addStringOption((option) => option.setName("url").setDescription("the song's url").setRequired(true)))
         .addSubcommand((subcommand) =>
             subcommand
-            .setName("playlist")
-            .setDescription("Loads a playlist of songs from a url")
-            .addStringOption((option) => option.setName("url").setDescription("the playlist's url").setRequired(true)))
+                .setName("playlist")
+                .setDescription("Loads a playlist of songs from a url")
+                .addStringOption((option) => option.setName("url").setDescription("the playlist's url").setRequired(true)))
         .addSubcommand((subcommand) =>
             subcommand
-            .setName("search")
-            .setDescription("Searches for song based on provided keywords")
-            .addStringOption((option) => option.setName("searchterms").setDescription("the search keywords").setRequired(true))
+                .setName("search")
+                .setDescription("Searches for song based on provided keywords")
+                .addStringOption((option) => option.setName("searchterms").setDescription("the search keywords").setRequired(true))
         ),
-    run: async({ client, interaction }) => {
+    run: async ({ client, interaction }) => {
         // interaction.deleteReply()
         if (!interaction.member.voice.channel)
             return updateConsole("error", interaction, "You need to be in a VC to use this command")
 
-        const queue = await client.player.createQueue(interaction.guild, {
+        const queue = await client.player.nodes.create(interaction.guild, {
             metadata: {
                 "channel": interaction.channel,
                 "pause": false
@@ -35,14 +35,14 @@ module.exports = {
         })
         if (!queue.connection) await queue.connect(interaction.member.voice.channel)
 
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
 
         if (interaction.options.getSubcommand() == "song") {
             let url = interaction.options.getString("url")
             const result = await client.player.search(url, {
                 requestedBy: interaction.user,
                 searchEngine: QueryType.YOUTUBE_VIDEO
-            })
+            }).catch(err => console.log(err))
             if (result.tracks.length === 0)
                 return updateConsole("error", interaction, "No results")
 
@@ -55,7 +55,7 @@ module.exports = {
             const result = await client.player.search(url, {
                 requestedBy: interaction.user,
                 searchEngine: QueryType.YOUTUBE_PLAYLIST
-            })
+            }).catch(err => console.log(err))
             if (result.tracks.length === 0)
                 return updateConsole("error", interaction, "No results")
 
@@ -68,8 +68,8 @@ module.exports = {
             let url = interaction.options.getString("searchterms")
             const result = await client.player.search(url, {
                 requestedBy: interaction.user,
-                searchEngine: QueryType.AUTO
-            })
+                fallbackSearchEngine: QueryType.YOUTUBE_SEARCH
+            }).catch(err => console.log(err))
             if (result.tracks.length === 0)
                 return updateConsole("error", interaction, "No results")
 
@@ -78,7 +78,10 @@ module.exports = {
             await queue.addTrack(song)
 
         }
-        if (!queue.playing) await queue.play()
+        if (!queue.isPlaying()) {
+            console.log("Play")
+            await queue.node.play()
+        }
 
     }
 }

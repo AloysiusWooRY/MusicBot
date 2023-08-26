@@ -1,13 +1,12 @@
 module.exports = {
     name: "interactionCreate",
-    run: async(bot, interaction) => {
-        const { client } = bot
+    run: async (bot, interaction) => {
         if (interaction.isCommand()) handleSlashCommand(bot, interaction)
         else if (interaction.isButton()) handleButton(bot, interaction)
     },
 }
 
-const handleButton = async(bot, interaction) => {
+const handleButton = async (bot, interaction) => {
 
     const { client } = bot
     const [name, ...params] = interaction.customId.split("-")
@@ -20,7 +19,7 @@ const handleButton = async(bot, interaction) => {
 
 }
 
-const handleSlashCommand = async(bot, interaction) => {
+const handleSlashCommand = async (bot, interaction) => {
 
     const { client } = bot
     if (!interaction.inGuild()) return interaction.reply("This command can only be used in a guild")
